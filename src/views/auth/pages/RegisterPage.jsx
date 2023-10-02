@@ -1,108 +1,77 @@
-import React from 'react';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import {FormProvider, useForm} from 'react-hook-form';
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Keyboard,
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  ScrollView,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import * as yup from 'yup';
-import {TextField} from '../../../components/FormControls';
-import {yupResolver} from '@hookform/resolvers/yup';
-import {Avatar, Button, ProgressBar, Title} from 'react-native-paper';
-import CheckBox from '@react-native-community/checkbox';
-import {Copyright} from '../../../components/Common';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {authActions} from '../AuthSlice';
-import PasswordField from '../../../components/FormControls/PasswordField';
+import {Button, ProgressBar, Title} from 'react-native-paper';
+import {Path, Svg} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
-
+import {useDispatch, useSelector} from 'react-redux';
+import * as yup from 'yup';
+import {BgLogImage, LogoWImage} from '../../../../assets';
+import {TextField} from '../../../components/FormControls';
+import PasswordField from '../../../components/FormControls/PasswordField';
+import {ColorApp} from '../../../utils/colors';
+import {authActions} from '../AuthSlice';
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight, // Adjust the marginTop to create space for the status bar
+    marginTop: StatusBar.currentHeight,
+    position: 'relative', // Adjust the marginTop to create space for the status bar
   },
 });
 function RegisterPage() {
-  const [isConfirm, setConfirm] = React.useState(false);
-  const registering = useSelector(state => state.auth.registering);
+  const logging = useSelector(state => state.auth.logging);
   const actionAuth = useSelector(state => state.auth.actionAuth);
   const navigation = useNavigation();
-
   const dispatch = useDispatch();
-
-  const InitialResgisterForm = {
+  const InitialLoginForm = {
+    name: '',
+    phoneNum: '',
+    address:'',
     username: '',
     password: '',
-    sdt: '',
-    accountName: '',
   };
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const schema = yup.object().shape({
-    name: yup
+    username: yup.string().required('Cần nhập tên đăng nhập'),
+    password: yup.string().required('Cần nhập mật khẩu'),
+    address: yup.string().required('Cần nhập tài khoản'),
+    name: yup.string().required('Cần nhập họ và tên'),
+    phoneNum: yup
       .string()
-      .required('Hãy nhập tên đầy đủ của bạn')
-      .test(
-        'Họ và tên nên gồm 2 từ trở lên',
-        'Họ và tên nên gồm ít nhất 2 từ không bao gồm chữ số',
-        value => {
-          const words = value.trim().split(' ');
-          return words.length >= 2 && words.every(word => !/\d/.test(word));
-        },
-      ),
-    username: yup
-      .string()
-      .required('Nhập mã sinh viên')
-      .test(
-        'Mã sinh viên có đủ 5 chữ số',
-        'Bắt đầu bằng A và có 5 chữ số đằng sau',
-        values => {
-          return values.length === 6 && values[0] === 'A';
-        },
-      )
-      .matches(/^A\d{5}$/, 'Mã sinh viên không hợp lệ'),
-    phoneNumber: yup
-      .string()
-      .required('Điền số điện thoại')
+      .required('Cần nhập số điện thoại')
       .matches(phoneRegExp, 'Số điện thoại không hợp lệ')
       .min(9, 'Quá ngắn')
       .max(11, 'Quá dài'),
-    password: yup
-      .string()
-      .required('Nhập mật khẩu')
-      .min(8, 'Mật khẩu phải dài hơn 8 kí tự')
-      .max(32, 'Mật khẩu quá dài')
-      .matches(/[A-Z]+/, 'Mật khẩu cần ít nhất 1 kí tự in hoa')
-      .matches(/[a-z]+/, 'Mật khẩu cần ít nhất 1 kí tự in thường'),
-    rePassword: yup
-      .string()
-      .required('Nhập lại mật khẩu')
-      .oneOf([yup.ref('password')], 'Mật khẩu không khớp'),
   });
-  const form = useForm({
-    defaultValue: InitialResgisterForm,
-    resolver: yupResolver(schema),
-  });
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (actionAuth == 'Failed') {
       Toast.show({
         type: 'error',
         text1: 'Thất bại',
-        text2: 'Mã sinh viên đã được sử dụng',
+        text2: 'Tài khoản hoặc mật khẩu không chính xác',
       });
     }
     if (actionAuth == 'Success') {
       navigation.replace('AppLayout');
     }
   }, [actionAuth]);
-
+  const form = useForm({
+    defaultValue: InitialLoginForm,
+    resolver: yupResolver(schema),
+  });
   const onSubmit = data => {
-    dispatch(authActions.register(data));
+    dispatch(authActions.login(data));
   };
 
   return (
@@ -112,81 +81,85 @@ function RegisterPage() {
         translucent={true}
         barStyle="dark-content"
       />
-      <ScrollView style={styles.container}>
-        <View>
-          {registering && (
-            <ProgressBar
-              indeterminate={true}
-              className="fixed top-0 left-0 w-screen"
-            />
-          )}
-          <View className="p-[30px] h-screen bg-white ">
+
+      <View style={styles.container}>
+        {logging && (
+          <ProgressBar
+            indeterminate={true}
+            className="absolute z-[2] top-0 left-0 w-screen"
+          />
+        )}
+        <View
+          className="absolute z-[1] w-screen"
+          style={{top: -StatusBar.currentHeight - 20}}>
+          <Svg
+            width="100%"
+            height="197"
+            viewBox="0 0 428 197"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <Path d="M428 0H0V145.332L214 197L428 145.332V0Z" fill="#35B6FF" />
+          </Svg>
+        </View>
+        <View
+          className="absolute z-[4] w-screen"
+          style={{
+            top: -StatusBar.currentHeight - 10,
+            height: 190,
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <LogoWImage style={{width: '60%'}} />
+        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View className="pt-[100] bg-white h-[100%] ">
             <Toast position="top" />
-            <View className="mt-[4vh] h-[100%]">
+            <BgLogImage style={{width: '100%'}} />
+            <View className="mt-[150] px-[30] absolute z-10 w-screen h-[100%]">
               <View className="flex mb-[20px] justify-center items-center">
-                <Avatar.Icon size={40} icon="lock" />
-                <Title className="text-3xl mt-[10px]  text-black">
-                  Đăng kí
+                <Title className="text-3xl font-medium mt-[10px]  text-black">
+                  Đăng ký
                 </Title>
               </View>
               <FormProvider {...form}>
                 <TextField name="name" label="Họ và tên" />
-                <View className="flex flex-row justify-between">
-                  <View className="basis-[48%] ">
-                    <TextField name="username" label="Mã sinh viên" />
-                  </View>
-                  <View className="basis-[50%] ">
-                    <TextField name="phoneNumber" label="Số điện thoại" />
-                  </View>
-                </View>
+                <TextField name="address" label="Địa chỉ" />
+                <TextField name="phoneNum" label="Số điện thoại" />
+                <TextField name="username" label="Tên tài khoản" />
                 <PasswordField name="password" label="Mật khẩu" />
-                <PasswordField name="rePassword" label="Nhập lại mật khẩu" />
-                <TouchableOpacity onPress={() => setConfirm(!isConfirm)}>
-                  <View className="flex flex-row items-center">
-                    <CheckBox
-                      value={isConfirm}
-                      onValueChange={() => setConfirm(!isConfirm)}
-                      style={{
-                        transform: [{scaleX: 1.2}, {scaleY: 1.2}],
-                        marginLeft: -3,
-                        marginRight: 5,
-                      }}
-                    />
-                    <Text className="flex-1 text-base text-black">
-                      Tôi đã đọc và đồng ý với{' '}
-                      <Text className="text-blue-600 text-base underline">
-                        Điều khoản và Chính sách bảo mật
-                      </Text>
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
                 <Button
                   style={{
-                    borderBottomLeftRadius: 6,
-                    borderBottomRightRadius: 6,
-                    borderTopLeftRadius: 6,
-                    borderTopRightRadius: 6,
+                    borderBottomLeftRadius: 30,
+                    borderBottomRightRadius: 30,
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
                   }}
                   mode="contained"
-                  className="my-3"
-                  disabled={registering || !isConfirm}
+                  className="my-3 bg-[#35B6FF]"
+                  disabled={logging}
                   onPress={form.handleSubmit(onSubmit)}>
-                  Đăng kí
+                  <Text className="text-base">Đăng nhập</Text>
                 </Button>
-                <TouchableOpacity onPress={() => navigation.goBack('Register')}>
-                  <Text className="text-blue-600 text-base underline">
-                    Bạn đã có tài khoản? Đăng nhập
-                  </Text>
-                </TouchableOpacity>
-                <View className="flex flex-row justify-center mt-[2vh]">
-                  <Copyright />
-                </View>
               </FormProvider>
             </View>
+            <View
+              className="absolute  z-10 items-center justify-center w-screen "
+              style={{bottom: 10, flex: 1}}>
+              <Text className="font-medium">Đã có tài khoản</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <View className="mt-1 flex-row items-center">
+                  <Text
+                    style={{color: ColorApp.text_link}}
+                    className="font-medium">
+                    Đăng nhập
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </TouchableWithoutFeedback>
+      </View>
     </SafeAreaView>
   );
 }

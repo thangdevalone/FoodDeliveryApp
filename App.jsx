@@ -7,6 +7,8 @@ import { PaperProvider } from 'react-native-paper';
 
 import FirstView from './src/views/FirstView';
 import LoginPage from './src/views/auth/pages/LoginPage';
+import RegisterPage from './src/views/auth/pages/RegisterPage';
+import AppLayout from './src/components/AppLayout';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +27,7 @@ const App = () => {
             component={LoginPage}
             options={{headerShown: false}}
           />
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Register"
             component={RegisterPage}
             options={{headerShown: false}}
@@ -34,7 +36,7 @@ const App = () => {
             name="AppLayout"
             component={AppLayout}
             options={{headerShown: false}}
-          /> */}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

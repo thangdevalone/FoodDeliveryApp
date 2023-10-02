@@ -1,6 +1,9 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import App from './App';
+import {persistor, store} from './src/app/store';
 function Main() {
   useEffect(() => {
     Orientation.lockToPortrait();
@@ -11,9 +14,11 @@ function Main() {
     };
   }, []);
   return (
- 
-        <App/>
-     
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
   );
 }
 
