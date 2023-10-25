@@ -5,18 +5,14 @@ import axiosClient from './axiosClient';
 
 const authApi={
     login(data){
-        const url="auth/login"
+        const url="login"
     
         return axiosClient.post(url,data)
     },
     register(data){
-        const url="auth/register"
-        const form={accountName:data.name,password:data.password,username:data.username,sdt:data.phoneNumber}
+        const url="register"
+        const form={address:data.address,password:data.password,username:data.username,sdt:data.phoneNum,fullname:data.name}
         return axiosClient.post(url,form)
-    },
-    hello(){
-        const url="auth/hello"
-        return axiosClient.get(url)
     }
 }
 export default authApi

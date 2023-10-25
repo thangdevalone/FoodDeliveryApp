@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState:{
     logging: false,
@@ -11,7 +11,6 @@ const authSlice = createSlice({
   reducers: {
     login(state, action) {
       state.logging = true
-      console.log(action.payload)
       state.actionAuth = "No action"
     },
 
@@ -46,6 +45,14 @@ const authSlice = createSlice({
     resetAction(state) {
       state.actionAuth = "No action"
     },
+    logOut(state){
+      state={
+        logging: false,
+        registering: false,
+        actionAuth: "No action",
+        currentUser: undefined,
+      }
+    }
     // ...các action khác
   },
 })

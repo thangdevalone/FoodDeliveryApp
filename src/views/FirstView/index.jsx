@@ -20,10 +20,10 @@ export default function FirstView({navigation}) {
   const [val, setVal] = React.useState(0);
   const goToNextSlide = () => {
     if (swiperRef.current) {
-      const currentIndex = swiperRef.current.state.index;
+      const currentIndex = swiperRef.current?.state?.index;
       const nextIndex = currentIndex + 1;
       // Ensure the nextIndex is within the bounds of the slides
-      if (nextIndex < swiperRef.current.state.total) {
+      if (nextIndex <= swiperRef.current.state.total) {
         swiperRef.current.scrollBy(1);
       }
       if(nextIndex===3){
@@ -42,7 +42,9 @@ export default function FirstView({navigation}) {
         <View className="mb-4 px-4 py-2 w-screen">
           <LogoImage />
         </View>
-        <Swiper
+        <Swiper 
+          key={3}
+          loadMinimal={true}
           onIndexChanged={index => {
             if (index === 0) {
               dotTranslateX.value = 0;
@@ -106,8 +108,8 @@ export default function FirstView({navigation}) {
               />
             </View>
           }>
-          <View className="w-screen items-center flex-1">
-            <FF1Image style={{width: '90%'}} />
+          <View key={0} className="w-screen items-center flex-1">
+            <FF1Image style={{width: '80%'}} />
             <View className="w-screen mt-4 p-5">
               <Text className="text-3xl mb-8 font-semibold text-black">
                 Món ăn yêu thích
@@ -115,8 +117,8 @@ export default function FirstView({navigation}) {
               <Text className="text-base text-[#6D6D6D]">Menu đa dạng</Text>
             </View>
           </View>
-          <View className="w-screen items-center flex-1">
-            <FF2Image style={{width: '90%'}} />
+          <View key={1} className="w-screen items-center flex-1">
+            <FF2Image style={{width: '80%'}} />
             <View className="w-screen mt-4 p-5">
               <Text className="text-3xl mb-8 font-semibold text-black">
                 Giá tốt nhất
@@ -124,8 +126,8 @@ export default function FirstView({navigation}) {
               <Text className="text-base text-[#6D6D6D]">Menu với nhiều sự lựa chọn</Text>
             </View>
           </View>
-          <View className="w-screen items-center flex-1">
-            <FF3Image style={{width: '90%', marginTop: 50}} />
+          <View key={2} className="w-screen items-center flex-1">
+            <FF3Image style={{width: '80%', marginTop: 50}} />
             <View className="w-screen mt-4 p-5">
               <Text className="text-3xl mb-8 font-semibold text-black">
                 Giao hàng nhanh

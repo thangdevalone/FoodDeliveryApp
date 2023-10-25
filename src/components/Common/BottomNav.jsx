@@ -1,55 +1,35 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useEffect } from 'react';
-import { colorDF1 } from '../../utils/colors';
 import Cart from '../../views/Cart';
 import Home from '../../views/Home';
 
+import { Animated } from 'react-native';
+import { useSelector } from 'react-redux';
+import { ColorApp } from '../../utils/colors';
+import Profile from '../../views/Profile';
 import {
   BagBold,
   BagOutline,
-  MesageOutline,
-  MessageBold,
   ShopBold,
   ShopOutline,
   UserBold,
-  UserOutline,
+  UserOutline
 } from '../Icons';
-import { Animated } from 'react-native';
-import { useSelector } from 'react-redux';
+import HomeNav from '../../views/Home/HomeNav';
 const Tab = createBottomTabNavigator();
 
 const iconComponents = {
   Home: {focused: ShopBold, unfocused: ShopOutline},
   Cart: {focused: BagBold, unfocused: BagOutline},
-  Messages: {focused: MessageBold, unfocused: MesageOutline},
   Profile: {focused: UserBold, unfocused: UserOutline},
 };
 
 
 export function BottomNav() {
-  const translateY = React.useRef(new Animated.Value(0)).current;
-  const dir=useSelector((state)=>state.app.dir)
-  
-  useEffect(()=>{
-    if(dir==="down"){
-      Animated.timing(translateY, {
-        toValue: 55,
-        duration: 250, // Animation duration in milliseconds
-        useNativeDriver: true, // Use native driver for performance
-      }).start();
-    }
-    if(dir==="up"){
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 250, // Animation duration in milliseconds
-        useNativeDriver: true, // Use native driver for performance
-      }).start();
-    }
-  },[dir])
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarActiveTintColor: colorDF1,
+        tabBarActiveTintColor:ColorApp.color_blue,
         tabBarInactiveTintColor: 'gray',
         tabBarHideOnKeyboard: true,
         tabBarIcon: ({color, focused, size}) => {
@@ -58,14 +38,13 @@ export function BottomNav() {
             : iconComponents[route.name].unfocused;
 
           return (
-            <IconComponent color={focused ? colorDF1 : color} size={size} />
+            <IconComponent color={focused ?ColorApp.color_blue : color} size={size} />
           );
         },
         tabBarStyle: {
           height: 55,
           paddingTop: 10,
           position:"absolute",
-          transform:[{translateY}],
           bottom:0,
           left:0,
         },
@@ -80,7 +59,7 @@ export function BottomNav() {
           },
           headerShown: false,
         })}
-        component={Home}
+        component={HomeNav}
       />
       <Tab.Screen
         name="Cart"

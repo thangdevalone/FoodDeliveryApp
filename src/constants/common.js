@@ -1,1 +1,1 @@
-export const STATIC_HOST = "https://thangdev.online/"
+export const STATIC_HOST = "https://api-luan.thangdev.online/"

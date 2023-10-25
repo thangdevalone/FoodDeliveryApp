@@ -3,20 +3,18 @@ import { call, delay, fork, put, takeLatest } from "redux-saga/effects";
 import authApi from "../../api/authApi";
 import { StorageKeys } from "../../constants";
 import { authActions } from "./AuthSlice";
+import { cartActions } from '../Cart/CartSlice';
 
 function* handleLogin(action) {
   try {
     const res = yield call(authApi.login, action.payload)
-    const user = res.data
+    const user = res
     yield put(authActions.loginSuccess(user))
-    yield call(AsyncStorage.setItem, StorageKeys.TOKEN, user.token);
     yield call(AsyncStorage.setItem, StorageKeys.USER, JSON.stringify(user));
-
-
   } catch (error) {
-    console.log(error)
-    // Handle the error here
     yield put(authActions.loginFailed())
+  }
+  finally{
     yield delay(100);
     yield put(authActions.resetAction());
   }
@@ -24,21 +22,24 @@ function* handleLogin(action) {
 function* handleRegister(action) {
   try {
     const res = yield call(authApi.register, action.payload)
-    const user = res.data
+    const user = res
+    
     yield put(authActions.registerSuccess(user))
-    yield call(AsyncStorage.setItem, StorageKeys.TOKEN, user.token);
     yield call(AsyncStorage.setItem, StorageKeys.USER, JSON.stringify(user));
 
   } catch (error) {
     // Handle the error here
     yield put(authActions.registerFailed())
+   
+  }
+  finally{
     yield delay(100);
     yield put(authActions.resetAction());
   }
 }
 function* handleLogout() {
-  yield call(AsyncStorage.removeItem, StorageKeys.TOKEN);
-    yield call(AsyncStorage.removeItem, StorageKeys.USER);
+  yield put(cartActions.deleteCart())
+  yield call(AsyncStorage.removeItem, StorageKeys.USER);
 }
 
 
