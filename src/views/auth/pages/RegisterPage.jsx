@@ -1,7 +1,7 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {FormProvider, useForm} from 'react-hook-form';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,20 +9,20 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
-import { Button, ProgressBar, Title } from 'react-native-paper';
-import { Path, Svg } from 'react-native-svg';
+import {Button, ProgressBar, Title} from 'react-native-paper';
+import {Path, Svg} from 'react-native-svg';
 import Toast from 'react-native-toast-message';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as yup from 'yup';
-import { BgLogImage, LogoWImage } from '../../../../assets';
-import { TextField } from '../../../components/FormControls';
+import {BgLogImage, LogoWImage} from '../../../../assets';
+import {TextField} from '../../../components/FormControls';
 import PasswordField from '../../../components/FormControls/PasswordField';
-import { DismisssKeyboard } from '../../../utils/DismissKeyboard';
-import { ColorApp } from '../../../utils/colors';
+import {DismisssKeyboard} from '../../../utils/DismissKeyboard';
+import {ColorApp} from '../../../utils/colors';
 import useKeyboardStatus from '../../../utils/useKeyboardStatus';
-import { authActions } from '../AuthSlice';
+import {authActions} from '../AuthSlice';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -94,8 +94,6 @@ function RegisterPage() {
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}>
           <>
-
-            
             <View
               className="absolute z-[1] w-screen"
               style={{top: -StatusBar.currentHeight + 10}}>
@@ -123,19 +121,17 @@ function RegisterPage() {
               <LogoWImage style={{width: '60%'}} />
             </View>
             <View className="absolute z-[10] w-full">
-            {logging && (
-              <ProgressBar
-                indeterminate={true}
-                className="absolute z-[2] top-0 left-0 w-screen"
-              />
-            )}
+              {logging && (
+                <ProgressBar
+                  indeterminate={true}
+                  className="absolute z-[2] top-0 left-0 w-screen"
+                />
+              )}
               <Toast position="top" />
-
             </View>
             <View
               className="pt-[120]  bg-white h-[100%] "
-              style={{paddingBottom: keyboardStatus?20:0}}>
-              
+              style={{paddingBottom: keyboardStatus ? 20 : 0}}>
               <BgLogImage style={{width: '100%'}} />
               <View className="mt-[200] px-[30] absolute z-10 w-screen h-[100%]">
                 <View className="flex mb-[20px] justify-center items-center">
@@ -159,9 +155,9 @@ function RegisterPage() {
                     mode="contained"
                     className="my-3 bg-[#35B6FF]"
                     disabled={logging}
-                    labelStyle={{color:"white"}}
+                    labelStyle={{color: 'white'}}
                     onPress={form.handleSubmit(onSubmit)}>
-                    <Text className="text-base" >Đăng Ký</Text>
+                    <Text className="text-base">Đăng Ký</Text>
                   </Button>
                 </FormProvider>
               </View>

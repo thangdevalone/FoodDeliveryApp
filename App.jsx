@@ -16,6 +16,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const user = useUserInfor();
+  console.log(user)
   return (
     <PaperProvider>
       <NavigationContainer>

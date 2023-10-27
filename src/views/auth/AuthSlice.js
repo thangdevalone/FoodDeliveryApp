@@ -46,12 +46,10 @@ export const authSlice = createSlice({
       state.actionAuth = "No action"
     },
     logOut(state){
-      state={
-        logging: false,
-        registering: false,
-        actionAuth: "No action",
-        currentUser: undefined,
-      }
+      state.currentUser=undefined
+    },
+    updateInfor(state,action){
+      state.currentUser={...state.currentUser,...action.payload}
     }
     // ...các action khác
   },
