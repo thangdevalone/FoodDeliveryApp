@@ -1,9 +1,8 @@
-import {View, Text, SafeAreaView} from 'react-native';
 import React from 'react';
-import {FocusStatusBar} from '../utils/FocusStatusBar';
-import {Button, Surface} from 'react-native-paper';
+import { SafeAreaView, Text, View } from 'react-native';
+import { Button, Surface } from 'react-native-paper';
 import { BgDfFoodWImage, TickImage } from '../../assets';
-import { handlePrice } from '../utils/handlePrice';
+import { FocusStatusBar } from '../utils/FocusStatusBar';
 
 const Payment = ({route,navigation}) => {
   const {total}=route.params
@@ -31,7 +30,6 @@ const Payment = ({route,navigation}) => {
         Trang chủ
       </Button>
       </View>
-
     </SafeAreaView>
   );
 };

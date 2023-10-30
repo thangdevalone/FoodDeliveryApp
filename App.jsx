@@ -1,16 +1,17 @@
-import {TransitionPresets} from '@react-navigation/stack';
-import React, {useEffect} from 'react';
+import { TransitionPresets } from '@react-navigation/stack';
+import React from 'react';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import {PaperProvider} from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import AppLayout from './src/components/AppLayout';
-import {useUserInfor} from './src/hooks';
+import { useUserInfor } from './src/hooks';
 import FirstView from './src/views/FirstView';
+import Payment from './src/views/Payment';
+import DetailOrder from './src/views/Profile/DetailOrder';
 import LoginPage from './src/views/auth/pages/LoginPage';
 import RegisterPage from './src/views/auth/pages/RegisterPage';
-import Payment from './src/views/Payment';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,11 @@ const App = () => {
               <Stack.Screen
                 name="Payment"
                 component={Payment}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DetailOrder"
+                component={DetailOrder}
                 options={{headerShown: false}}
               />
             </>

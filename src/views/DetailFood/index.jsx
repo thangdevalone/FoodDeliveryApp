@@ -103,7 +103,7 @@ const DetailFoodScreen = ({route, navigation}) => {
                 />
               </View>
               <View className="mt-[40px] py-[20px] px-[15px] ">
-                <View className="flex-row justify-between items-center px-[10]">
+                <View className="flex-row justify-between gap-2 items-center px-[10]">
                   <Text className="text-black font-semibold text-3xl capitalize">
                     {foodData.nameFood}
                   </Text>
@@ -119,7 +119,7 @@ const DetailFoodScreen = ({route, navigation}) => {
                   <Text className="text-xl text-black">Mô tả</Text>
                   <Text className="mt-2 text-base">{foodData.detail}</Text>
                 </View>
-                <View className="flex-row items-center justify-between mt-5 mx-2">
+                <View className="flex-row items-center justify-center mt-5 mx-2">
                   {existingItem ? (
                     <Button mode="contained-tonal" onPress={()=>navigation.navigate("Cart")}>
                       Đã có trong giỏ
@@ -133,7 +133,7 @@ const DetailFoodScreen = ({route, navigation}) => {
                       Thêm vào giỏ hàng
                     </Button>
                   )}
-                  <Button mode="contained-tonal">Mua ngay</Button>
+                 
                 </View>
               </View>
             </View>

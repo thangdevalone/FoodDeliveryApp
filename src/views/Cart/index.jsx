@@ -16,6 +16,7 @@ import {handlePrice} from '../../utils/handlePrice';
 import {cartActions} from './CartSlice';
 import FoodItem from './FoodItem';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { orderActions } from '../Profile/OrderSlice';
 
 const renderRightActions = (progress, dragX, onClick) => {
   return (
@@ -45,6 +46,7 @@ const Cart = ({navigation}) => {
     }
     prevOpenedRow = row[index];
   };
+  
   const [total,setTotal]=useState(handlePrice(
     cartData.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -59,6 +61,12 @@ const Cart = ({navigation}) => {
       ),
     ))
   },[cartData])
+  const handleOrder=()=>{
+    dispatch(orderActions.addOrder({cart:cartData,total:total}))
+    dispatch(cartActions.deleteCart())
+    navigation.navigate('Payment',{total:total});
+    
+  }
   return (
     <SafeAreaView
       style={{flex: 1, position: 'relative', marginBottom: 55}}
@@ -109,7 +117,7 @@ const Cart = ({navigation}) => {
         </GestureHandlerRootView>
       </ScrollView>
       {cartData.length > 0 && (
-        <View className="flex-row mb-2 justify-center">
+        <View className="flex-row mb-2 mt-2 justify-center">
           <Surface
             elevation={1}
             style={{borderRadius: 10, marginBottom: 10}}
@@ -134,7 +142,7 @@ const Cart = ({navigation}) => {
             <Button
               mode="contained-tonal"
               className="mt-4"
-              onPress={()=>{navigation.navigate('Payment',{total:total});dispatch(cartActions.deleteCart())}}
+              onPress={handleOrder}
               labelStyle={{fontSize: 18}}>
               Xác nhận mua
             </Button>

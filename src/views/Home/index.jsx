@@ -50,23 +50,9 @@ const HomeScreen = ({ navigation }) => {
               shadowOpacity: 0.2,
               elevation: 10,
             }}
-            className="flex flex-row px-4 pb-3 items-center justify-between bg-white w-screen">
+            className="flex flex-row px-4 pb-5 items-center justify-between bg-white w-screen">
             <LogoImage />
-            <TouchableOpacity
-              style={{
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 1,
-                },
-                shadowOpacity: 0.22,
-                shadowRadius: 2.22,
-                borderRadius: 100,
-                elevation: 3,
-              }}
-              className="mr-4 mt-4 p-2 bg-white">
-              <Icon name="search" size={25} color="#000" />
-            </TouchableOpacity>
+          
           </View>
           <View className="px-4 w-full relative">
             <RowBannerImage style={{width: '100%'}} />
@@ -74,6 +60,7 @@ const HomeScreen = ({ navigation }) => {
               Combo hoàn hảo
             </Text>
             <TouchableOpacity
+              onPress={()=>{navigation.navigate('Cart')}}
               style={{backgroundColor: ColorApp.color_red, borderRadius: 20}}
               className="py-1 px-3 absolute top-[85px] left-[30px]">
               <Text className="text-white font-semibold">Đặt hàng</Text>

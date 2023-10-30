@@ -1,17 +1,24 @@
-import {View, Text, SafeAreaView} from 'react-native';
-import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import React, {useState} from 'react';
 import {FocusStatusBar} from '../../utils/FocusStatusBar';
 import {FF1Image} from '../../../assets';
 import {useUserInfor} from '../../hooks';
-import {Button, Dialog, Portal, ProgressBar} from 'react-native-paper';
-import {useDispatch} from 'react-redux';
+import {Button, Dialog, Portal, ProgressBar, Surface} from 'react-native-paper';
+import {useDispatch, useSelector} from 'react-redux';
 import {authActions} from '../auth/AuthSlice';
 import Toast from 'react-native-toast-message';
 import authApi from '../../api/authApi';
-import * as yup from 'yup'
-import { FormProvider, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField } from '../../components/FormControls';
+import * as yup from 'yup';
+import {FormProvider, useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {TextField} from '../../components/FormControls';
+import { useNavigation } from '@react-navigation/native';
 const Profile = () => {
   const user = useUserInfor();
   const [visible, setVisible] = useState(false);
@@ -25,7 +32,7 @@ const Profile = () => {
     std: user.std,
     address: user.address,
   };
-  const [loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const schema = yup.object().shape({
@@ -42,13 +49,14 @@ const Profile = () => {
     defaultValues: initForm,
     resolver: yupResolver(schema),
   });
+  const navitation=useNavigation()
   const onSubmit = data => {
-    (async ()=>{
+    (async () => {
       try {
-        setLoading(true)
-        const res=await authApi.update({...data,id:user.id})
-        dispatch(authActions.updateInfor(data))
-        hideDialog()
+        setLoading(true);
+        await authApi.update({...data, id: user.id});
+        dispatch(authActions.updateInfor(data));
+        hideDialog();
         Toast.show({
           type: 'success',
           text1: 'Thành công',
@@ -60,13 +68,12 @@ const Profile = () => {
           text1: 'Thất bại',
           text2: 'Có lỗi xảy ra',
         });
+      } finally {
+        setLoading(false);
       }
-      finally{
-        setLoading(false)
-      }
-    })()
+    })();
   };
-
+  const data = useSelector(state => state.order.data);
   return (
     <SafeAreaView style={{flex: 1, marginBottom: 55, backgroundColor: 'white'}}>
       <Portal>
@@ -88,17 +95,17 @@ const Profile = () => {
           </FormProvider>
         </Dialog>
       </Portal>
-      <View className="z-[20px] relative">
-      <Toast position='top'/>
-      {loading && (
-                <ProgressBar
-                  indeterminate={true}
-                  className="absolute z-[2] top-0 left-0 w-screen"
-                />
-              )}
+      <View style={{zIndex:20}} className="relative">
+        <Toast position="top" />
+        {loading && (
+          <ProgressBar
+            indeterminate={true}
+            className="absolute z-[2] top-0 left-0 w-screen"
+          />
+        )}
       </View>
       <FocusStatusBar backgroundColor="white" barStyle="dark-content" />
-      <View className="">
+      <ScrollView className="">
         <View className="flex-row mt-5 mb-1 p-[10px]">
           <FF1Image style={{width: 80, height: 80}} />
           <View className="flex-col ml-2 mt-1">
@@ -110,18 +117,54 @@ const Profile = () => {
           </View>
         </View>
         <View className="flex-row justify-between mx-5">
-          <Button mode="contained" onPress={()=>setVisible(true)}>Chỉnh sửa</Button>
+          <Button mode="contained" onPress={() => setVisible(true)}>
+            Chỉnh sửa
+          </Button>
           <Button mode="outlined" onPress={handleLogOut}>
             Đăng xuất
           </Button>
         </View>
         <View className="bg-slate-300 w-full my-5 h-[4px]"></View>
         <View className="px-5">
-          <Text className="text-xl font-semibold text-black">
+          <Text className="text-xl font-semibold mb-4 text-black">
             Lịch sử đơn hàng
           </Text>
+          {data &&
+            data.map(item => (
+              <Surface
+                style={{
+                  marginBottom: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'white',
+                }}
+                key={item.idx}
+                elevation={2}>
+                <TouchableWithoutFeedback onPress={()=>{navitation.navigate('DetailOrder',{data:item.cart,total:item.total})}}>
+                  <View>
+                    <View className="px-5 py-4 items-center flex-row justify-between">
+                      <Text
+                        className="text-base text-black font-semibold"
+                        key={item.idx}>
+                        Đơn hàng {item.idx + 1}
+                      </Text>
+                      <Text>{item.total} VND</Text>
+                    </View>
+                    <Text className="pl-5 pb-4 capitalize line-clamp-1">
+                      {item.cart
+                        .map(
+                          (data, index) =>
+                            `${data.nameFood}*${data.quantity}${
+                              index < item.cart?.length-1 ? ', ' : ''
+                            }`,
+                        )
+                        .join('')}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              </Surface>
+            ))}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

@@ -49,8 +49,7 @@ const ListFoodTypeScreen = ({route, navigation}) => {
                 }}>
                 <Surface
                   elevation={2}
-                  className="bg-white mb-3 mx-2 mt-2 rounded-xl pl-2 pr-4 py-3">
-                  <View className="flex-row justify-between items-center">
+                  className="flex-row gap-2 justify-between items-center bg-white mb-3 mx-2 mt-2 rounded-xl pl-2 pr-4 py-3">
                     <View className="flex-row items-center">
                       <Image
                         resizeMode="contain"
@@ -68,10 +67,9 @@ const ListFoodTypeScreen = ({route, navigation}) => {
                         </Text>
                       </View>
                     </View>
-                    <Button   mode="contained-tonal">
-                      Xem ngay
+                    <Button  mode="contained-tonal">
+                      Xem
                     </Button>
-                  </View>
                 </Surface>
               </TouchableWithoutFeedback>
             ))}
